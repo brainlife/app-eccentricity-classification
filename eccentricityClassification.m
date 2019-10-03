@@ -26,6 +26,10 @@ load(config.wmc);
 out_ijk = eccentricity.qto_ijk;
 wbFG = fullfile(config.track)
 
+if ~exist(fg_classified)
+	fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG);
+end
+
 % need to edit this for loop for multiple tracts in classification (i.e.
 % both left and right hemisphere OR, or OT and OR, etc). currently works
 % with one tract at a time
