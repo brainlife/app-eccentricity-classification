@@ -54,14 +54,12 @@ for ifg = 1:length(fg_classified)
     end
     
     % create index for streamlines based on eccentricity critera: R1 = 0-3,
-    % R2 = 15-30, R3 = 30-90
+    % R2 = 15-90
     for ii = 1:length(ecc)
         if ecc(ii) >= 0 && ecc(ii) < 3
             index(ii) = 1;
-        elseif ecc(ii) >= 15 && ecc(ii) < 30
+        elseif ecc(ii) >= 15 && ecc(ii) <= 90
             index(ii) = 2;
-        elseif ecc(ii) >= 30 && ecc(ii) <= 90
-            index(ii) = 3;
         else
             index(ii) = 0;
         end
@@ -69,7 +67,7 @@ for ifg = 1:length(fg_classified)
 end
 
 % create new classification structure
-classification.names = {'R1','R2','R3'};
+classification.names = {'R1','R2'};
 classification.index = index';
 fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG);
 
