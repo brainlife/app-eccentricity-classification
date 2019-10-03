@@ -56,7 +56,7 @@ for ifg = 1:length(fg_classified)
     % create index for streamlines based on eccentricity critera: R1 = 0-3,
     % R2 = 15-90
     for ii = 1:length(ecc)
-        if ecc(ii) >= 0 && ecc(ii) < 3
+        if ecc(ii) >= 0 && ecc(ii) <= 5
             index(ii) = 1;
         elseif ecc(ii) >= 15 && ecc(ii) <= 90
             index(ii) = 2;
