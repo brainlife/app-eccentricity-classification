@@ -21,7 +21,7 @@ topdir = pwd;
 config = loadjson('config.json');
 
 % parse arguments
-eccentricity = niftiRead(fullfile(config.eccentricity,'eccentricity.nii.gz'));
+eccentricity = niftiRead(fullfile(config.eccentricity));
 load(config.wmc);
 out_ijk = eccentricity.qto_ijk;
 wbFG = fullfile(config.track)
@@ -56,7 +56,7 @@ for ifg = 1:length(fg_classified)
     % create index for streamlines based on eccentricity critera: R1 = 0-3,
     % R2 = 15-30, R3 = 30-90
     for ii = 1:length(ecc)
-        if ecc(ii) >= 0 && ecc(ii) < 3
+        if ecc(ii) >= 0 && ecc(ii) < 5
             index(ii) = 1;
         elseif ecc(ii) >= 15 && ecc(ii) < 30
             index(ii) = 2;
@@ -69,7 +69,7 @@ for ifg = 1:length(fg_classified)
 end
 
 % create new classification structure
-classification.names = {'R1','R2','R3'};
+classification.names = {'macular','periphery','far_periphery'};
 classification.index = index';
 fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG);
 
