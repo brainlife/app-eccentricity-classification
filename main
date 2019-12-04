@@ -4,8 +4,18 @@
 
 mkdir -p classification
 
-time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/eccentricityClassification
+if [ ! -f eccentricity.nii.gz ]; then
+    [ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
+    echo $FREESURFER_LICENSE > license.txt
+    echo "converting appropriate parcellations"
+    time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/freesurfer_on_mcr:6.0.2 ./convert.sh
+fi
 
-mv output.mat ./classification/
-mv tracts ./classification/
-mv output_fibercounts.txt ./classification/
+echo "creating hemispheric eccentricity rois"
+time singularity exec -e docker://brainlife/fsl:latest ./mask.sh
+
+#time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/eccentricityClassification
+
+#mv output.mat ./classification/
+#mv tracts ./classification/
+#mv output_fibercounts.txt ./classification/
