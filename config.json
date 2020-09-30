@@ -1,9 +1,0 @@
-{
-	"eccentricity":	"/home/brad/Desktop/v1Test/prf/eccentricity.nii.gz",
-	"track":	"/home/brad/Desktop/app-eccentricity-classification/track.tck",
-	"MinDegree":	"0 5 30",
-	"MaxDegree":	"3 15 90",
-	"dtiinit":	"/home/brad/Desktop/v1Test/dtiinit/.",
-	"freesurfer":	"/home/brad/Desktop/v1Test/output/",
-	"seed_roi":	"008109"
-}

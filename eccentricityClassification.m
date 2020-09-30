@@ -21,52 +21,58 @@ topdir = pwd;
 config = loadjson('config.json');
 
 % parse arguments
+rois = fullfile(config.rois);
+%varea = split(config.visualArea);
+varea = config.visualArea;
+tracts = split(config.tractNames);
+operations = split(config.operations);
 MinDegree = [str2num(config.MinDegree)];
 MaxDegree = [str2num(config.MaxDegree)];
-wbFG = {fullfile(config.track)}
+pre_classification = load(config.classification,'classification');
+wbFG = config.wbFG;
 
-for dd = 1:length(MinDegree)
-    eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
-        bsc_loadAndParseROI(fullfile(sprintf('Ecc%sto%s.nii.gz',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))));
+% make pre_fg_classified to make identification easier
+pre_fg_classified = bsc_makeFGsFromClassification_v4(pre_classification.classification,wbFG)
+
+% get classification number index for each inputted tract and their fiber
+% indices in the classification structure
+for tt = 1:length(tracts)
+    tractsIndex(tt) = find(contains(pre_classification.classification.names,tracts{tt}));
+    tractsIndices.(tracts{tt}) = find(pre_classification.classification.index == tractsIndex(tt));
 end
 
-[mergedFG, pre_classification]=bsc_mergeFGandClass(wbFG);
-pre_fg_classified = bsc_makeFGsFromClassification_v4(pre_classification,wbFG{:});
+for dd = 1:length(MinDegree)
+  eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
+      bsc_loadAndParseROI(fullfile(sprintf('%s/ROI%s.Ecc%sto%s.nii.gz',rois,varea,num2str(MinDegree(dd)),num2str(MaxDegree(dd)))));
+end
 
 % need to edit this for loop for multiple tracts in classification (i.e.
 % both left and right hemisphere OR, or OT and OR, etc). currently works
 % with one tract at a time
-for ifg = 1:length(pre_fg_classified)
+for ifg = 1:length(tractsIndex)
     for dd = 1:length(MinDegree)
-        [~, keep.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd))))] = ...
-            wma_SegmentFascicleFromConnectome(pre_fg_classified{ifg}, ...
+        [~, keep.(sprintf('%s_Ecc%sto%s',tracts{ifg},num2str(MinDegree(dd)),num2str(MaxDegree(dd))))] = ...
+            wma_SegmentFascicleFromConnectome(pre_fg_classified{tractsIndex(ifg)}, ...
             [{eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd))))} ],...
-            {'endpoints' }, 'dud');
-        keep.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
-            keep.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) * dd;
+            {operations{ifg} }, 'dud');
     end
 end
 
-index_pre = [keep.(sprintf('Ecc%sto%s',num2str(MinDegree(1)),num2str(MaxDegree(1)))) ...
-    keep.(sprintf('Ecc%sto%s',num2str(MinDegree(2)),num2str(MaxDegree(2)))) ...
-    keep.(sprintf('Ecc%sto%s',num2str(MinDegree(3)),num2str(MaxDegree(3))))];
-
-for ii = 1:length(index_pre)
-    if isequal(median(index_pre(ii,:)),0)
-        index(ii) = max(index_pre(ii,:));
-    elseif isequal(median(index_pre(ii,:)),2) && isequal(min(index_pre(ii,:)),1)
-        index(ii) = min(index_pre(ii,:));
-    elseif isequal(median(index_pre(ii,:)),2) || isequal(median(index_pre(ii,:)),1)
-        index(ii) = median(index_pre(ii,:));
+% create new classification structure of tracts binned by eccentricity
+classification.index = pre_classification.classification.index*0;
+count = 0;
+for ifg = 1:length(tracts)
+    for dd = 1:length(MinDegree)
+        count = count+1;
+        classification.names{count} = sprintf('%s_Ecc%sto%s',tracts{ifg},num2str(MinDegree(dd)),num2str(MaxDegree(dd)));
+        indices = find(keep.(sprintf('%s_Ecc%sto%s',tracts{ifg},num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) == 1);
+        cleaned_indices = tractsIndices.(tracts{ifg})(indices);
+        classification.index(cleaned_indices) = count;
     end
 end
-
-classification = [];
-classification.index = index';
 
 % create new classification structure
-classification.names = {'macular','periphery','far_periphery'};
-fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG{:});
+fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG);
 
 % save classification structure
 save('output.mat','classification','fg_classified','-v7.3');
@@ -87,9 +93,10 @@ for it = 1:length(tracts)
 
    %tract.coords = tracts(it).fibers;
    %pick randomly up to 1000 fibers (pick all if there are less than 1000)
-   fiber_count = min(1000, numel(tracts{it}.fibers));
-   tract.coords = tracts{it}.fibers(randperm(fiber_count)); 
-   
+   %fiber_count = min(1000, numel(tracts{it}.fibers));
+   %tract.coords = tracts{it}.fibers(randperm(fiber_count)); 
+   fiber_count = length(tracts{it}.fibers);
+   tract.coords = tracts{it}.fibers;
    savejson('', tract, fullfile('tracts',sprintf('%i.json',it)));
    all_tracts(it).filename = sprintf('%i.json',it);
    clear tract
@@ -112,6 +119,5 @@ T = cell2table(tract_info);
 T.Properties.VariableNames = {'Tracts', 'FiberCount'};
 
 writetable(T, 'output_fibercounts.txt');
-
 
 end
