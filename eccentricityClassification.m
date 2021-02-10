@@ -22,8 +22,8 @@ config = loadjson('config.json');
 
 % parse arguments
 rois = fullfile(config.rois);
-%varea = split(config.visualArea);
-varea = config.visualArea;
+varea = split(config.visualArea);
+%varea = config.visualArea;
 tracts = split(config.tractNames);
 operations = split(config.operations);
 MinDegree = [str2num(config.MinDegree)];
@@ -39,12 +39,16 @@ pre_fg_classified = bsc_makeFGsFromClassification_v4(pre_classification.classifi
 for tt = 1:length(tracts)
     tractsIndex(tt) = find(contains(pre_classification.classification.names,tracts{tt}));
     tractsIndices.(tracts{tt}) = find(pre_classification.classification.index == tractsIndex(tt));
+    for dd = 1:length(MinDegree)
+        eccen.(sprintf('%s_Ecc%sto%s',strrep(varea{tt},'.','_'),num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
+            bsc_loadAndParseROI(fullfile(sprintf('%s/ROI%s.Ecc%sto%s.nii.gz',rois,varea{tt},num2str(MinDegree(dd)),num2str(MaxDegree(dd)))));
+    end
 end
 
-for dd = 1:length(MinDegree)
-  eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
-      bsc_loadAndParseROI(fullfile(sprintf('%s/ROI%s.Ecc%sto%s.nii.gz',rois,varea,num2str(MinDegree(dd)),num2str(MaxDegree(dd)))));
-end
+% for dd = 1:length(MinDegree)
+%   eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd)))) = ...
+%       bsc_loadAndParseROI(fullfile(sprintf('%s/ROI%s.Ecc%sto%s.nii.gz',rois,varea,num2str(MinDegree(dd)),num2str(MaxDegree(dd)))));
+% end
 
 % need to edit this for loop for multiple tracts in classification (i.e.
 % both left and right hemisphere OR, or OT and OR, etc). currently works
@@ -53,7 +57,7 @@ for ifg = 1:length(tractsIndex)
     for dd = 1:length(MinDegree)
         [~, keep.(sprintf('%s_Ecc%sto%s',tracts{ifg},num2str(MinDegree(dd)),num2str(MaxDegree(dd))))] = ...
             wma_SegmentFascicleFromConnectome(pre_fg_classified{tractsIndex(ifg)}, ...
-            [{eccen.(sprintf('Ecc%sto%s',num2str(MinDegree(dd)),num2str(MaxDegree(dd))))} ],...
+            [{eccen.(sprintf('%s_Ecc%sto%s',strrep(varea{ifg},'.','_'),num2str(MinDegree(dd)),num2str(MaxDegree(dd))))} ],...
             {operations{ifg} }, 'dud');
     end
 end
