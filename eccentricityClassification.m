@@ -79,7 +79,7 @@ end
 fg_classified = bsc_makeFGsFromClassification_v4(classification,wbFG);
 
 % save classification structure
-save('output.mat','classification','fg_classified','-v7.3');
+save('output.mat','classification','fg_classified');
 
 % create tracts for json structures for visualization
 tracts = fg2Array(fg_classified);
