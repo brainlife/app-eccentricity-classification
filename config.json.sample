@@ -1,0 +1,10 @@
+{
+	"rois":	"/home/brad/Desktop/app-eccentricity-classification/data/rois/rois/",
+	"visualArea":	"varea",
+	"classification":	"/home/brad/Desktop/app-eccentricity-classification/data/wmc/classification.mat",
+	"wbFG":	"/home/brad/Desktop/app-eccentricity-classification/data/track/track.tck",
+	"operations":	"endpoints endpoints both_endpoints both_endpoints",
+	"MinDegree":	"0 6 30",
+	"MaxDegree":	"3 30 90",
+	"tractNames":	"leftILF rightILF leftVOF rightVOF"
+}
