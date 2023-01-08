@@ -10,7 +10,7 @@ set -ex
 
 # merge and binarize parcellations
 if [ ! -f parc.nii.gz ]; then
-	time singularity exec -e docker://brainfe/fsl:6.0.1 ./combineParcs.sh
+	time singularity exec -e docker://brainfe/fsl:5.0.11 ./combineParcs.sh
 fi
 
 ## divide desired tracts into individual tracts
@@ -31,7 +31,7 @@ fi
 
 # create individual tracts per each parcel in combined parcellations
 if [ ! -f track/track.tck ]; then
-	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./combine.sh
+	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./ecc_segment.sh
 fi
 
 # build new classification structure
@@ -45,6 +45,6 @@ if [ ! -f wmc/classification.mat ]; then
 	exit 1
 else
 	echo "combination complete"
-	mv *.tck *.txt ./raw/
+	mv *.tck *.txt *.csv ./raw/
 	exit 0
 fi

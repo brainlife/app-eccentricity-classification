@@ -8,7 +8,8 @@ indices=`jq -r '.selectIndices' config.json`
 if [ -z ${indices} ]; then
 	holder=(*track*.tck)
 	indices=""
-	for (( i=0; i<${#holder[*]}; i++ )); then
+	for (( i=0; i<${#holder[*]}; i++ ));
+	do
 		indices="$indices $((i+1))"
 	done
 fi
@@ -21,8 +22,14 @@ done
 
 [ ! -d tmp ] && mkdir tmp 
 mv track*_parc*.tck ./tmp/
+mv names.txt ./tmp/
 
 mv *.tck *.txt *.nii.gz ./raw/
 
 mv ./tmp/* ./ && rm -rf tmp
 
+# create new tractogram
+if [ ! -f track/track.tck ]; then
+	tckedit ${holder[*]} track/track.tck
+	tckinfo ./track/track.tck >> track/track_info.txt
+fi
