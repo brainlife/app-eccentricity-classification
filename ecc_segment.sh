@@ -30,6 +30,7 @@ mv ./tmp/* ./ && rm -rf tmp
 
 # create new tractogram
 if [ ! -f track/track.tck ]; then
+	holder=(*track*.tck)
 	tckedit ${holder[*]} track/track.tck
 	tckinfo ./track/track.tck >> track/track_info.txt
 fi

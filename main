@@ -10,7 +10,7 @@ set -ex
 
 # merge and binarize parcellations
 if [ ! -f parc.nii.gz ]; then
-	time singularity exec -e docker://brainfe/fsl:5.0.11 ./combineParcs.sh
+	time singularity exec -e docker://brainlife/fsl:5.0.11 ./combineParcs.sh
 fi
 
 ## divide desired tracts into individual tracts
