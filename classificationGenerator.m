@@ -25,7 +25,7 @@ for ii = 1:length(tcks)
         tmpname = split(tcks(ii).name,'_');
         parcname = tmpname{2};
         tmpname = tmpname{1};
-        tmpname = split(tmpname,'node')
+        tmpname = split(tmpname,'track');
         tmpname = str2num(tmpname{2});
         fgPath{ii} = tcks(ii).name;
         track_names{ii} = strcat(names{tmpname},'_',parcname);
@@ -95,6 +95,3 @@ writetable(T, fullfile('wmc','output_fibercounts.txt'));
 
 exit;
 end
-
-
-
