@@ -20,14 +20,12 @@ if [ ! -f assignments.txt ]; then
 fi
 
 # create assignments for each tract and parcel in combined parcellations
-if [ ! -f track/track.tck ]; then
+if [ ! -f tmp.csv ]; then
 	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./segment.sh
 fi
 
 # clean up assignments text files
-if [ ! -f assignments.txt ]; then
-	time singularity exec -e docker://brainlife/pyafq:1.0 ./cleanup_assignments.py
-fi
+time singularity exec -e docker://brainlife/pyafq:1.0 ./cleanup_assignments.py
 
 # create individual tracts per each parcel in combined parcellations
 if [ ! -f track/track.tck ]; then

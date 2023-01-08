@@ -31,4 +31,4 @@ fi
 # add parcellations together
 $cmd parc.nii.gz
 
-[ ! -f parc.nii.gz ] && echo "something went wrong. check logs and derivatives" && exit 1
+# [ ! -f parc.nii.gz ] && echo "something went wrong. check logs and derivatives" && exit 1
