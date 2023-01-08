@@ -3,6 +3,9 @@
 # top variables
 track=`jq -r '.track' config.json`
 indices=`jq -r '.selectIndices' config.json`
+parc=`jq -r '.parcellations' config.json`
+
+[ ! -f parc.nii.gz ] && cp ${parc} ./parc.nii.gz
 
 # generate individual tracts for each index
 connectome2tck ${track} assignments.txt track -files per_node
