@@ -18,7 +18,7 @@ track_names = {};
 
 % Set tck file path/s
 disp('merging tcks')
-tcks=dir('node*_parc*.tck')
+tcks=dir('track*_parc*.tck')
 for ii = 1:length(tcks)
     tmp = fgRead(tcks(ii).name);
     if length(tmp.fibers) > 0
