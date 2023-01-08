@@ -1,19 +1,50 @@
 #!/bin/bash
-#PBS -l nodes=1,vmem=16gb,walltime=0:30:00
-#PBS -N app-eccentricity-classification
+#PBS -l nodes=1:ppn=1,vmem=20gb,walltime=0:30:00
+#PBS -N app-combine-tracts
 
-mkdir -p classification
+set -ex
 
-time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/eccentricityClassification
+[ ! -d track ] && mkdir track
+[ ! -d wmc ] && mkdir wmc
+[ ! -d raw ] && mkdir raw
 
-if [ -f output.mat ]; then
-	echo "complete"
-	mkdir -p classification
-	mv output.mat ./classification/classification.mat
-	mv tracts ./classification/
-	mv output_fibercounts.txt ./classification/
-	exit 0
-else
-	echo "failed"
+# merge and binarize parcellations
+if [ ! -f parc.nii.gz ]; then
+	time singularity exec -e docker://brainfe/fsl:6.0.1 ./combineParcs.sh
+fi
+
+## divide desired tracts into individual tracts
+# extract classification names and indices
+if [ ! -f assignments.txt ]; then
+	time singularity exec -e docker://brainlife/pyafq:1.0 ./assignments.py
+fi
+
+# create assignments for each tract and parcel in combined parcellations
+if [ ! -f track/track.tck ]; then
+	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./segment.sh
+fi
+
+# clean up assignments text files
+if [ ! -f assignments.txt ]; then
+	time singularity exec -e docker://brainlife/pyafq:1.0 ./cleanup_assignments.py
+fi
+
+# create individual tracts per each parcel in combined parcellations
+if [ ! -f track/track.tck ]; then
+	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./combine.sh
+fi
+
+# build new classification structure
+if [ ! -f wmc/classification.mat ]; then
+	time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/classificationGenerator
+fi
+
+# final check
+if [ ! -f wmc/classification.mat ]; then
+	echo "combination failed. see logs and derivatives"
 	exit 1
+else
+	echo "combination complete"
+	mv *.tck *.txt ./raw/
+	exit 0
 fi
