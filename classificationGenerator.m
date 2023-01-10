@@ -50,7 +50,7 @@ end
 
 % Amend name of tract in classification structure
 for ii = 1:length(track_names)
-    classification.names{ii} = strcat(erase(track_names{ii},'.tck'));
+    classification.names{ii} = strcat(track_names{ii});
 end
 save('wmc/classification.mat','classification')
 
