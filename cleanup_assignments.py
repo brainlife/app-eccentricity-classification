@@ -14,7 +14,7 @@ def write_txt(data,out_name):
 
 def identify_both_endpoints(data):
 	
-	return data.apply(lamda x: x[0] if x[0] == x[1] else 0, axis='columns').tolist())
+	return data.apply(lambda x: x[0] if x[0] == x[1] else '0', axis='columns').tolist()
 
 def load_assignment_data(assignment):
 
