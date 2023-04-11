@@ -1,43 +1,24 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=1,vmem=20gb,walltime=1:30:00
-#PBS -N app-combine-tracts
+#PBS -N app-segment-wbtractogram
 
 set -ex
 
 [ ! -d track ] && mkdir track
-[ ! -d wmc ] && mkdir wmc
+# [ ! -d wmc ] && mkdir wmc
 [ ! -d raw ] && mkdir raw
-
-## divide desired tracts into individual tracts
-# extract classification names and indices
-if [ ! -f assignments.txt ]; then
-	time singularity exec -e docker://brainlife/pyafq:1.0 ./assignments.py
-fi
 
 # create assignments for each tract and parcel in parcellations
 if [ ! -f tmp.csv ]; then
 	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./segment.sh
 fi
 
-# clean up assignments text files
-time singularity exec -e docker://brainlife/pyafq:1.0 ./cleanup_assignments.py
-
-# create individual tracts per each parcel in combined parcellations
-if [ ! -f track/track.tck ]; then
-	time singularity exec -e docker://brainlife/mrtrix3:3.0.0 ./ecc_segment.sh
-fi
-
-# build new classification structure
-if [ ! -f wmc/classification.mat ]; then
-	time singularity exec -e docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/classificationGenerator
-fi
-
 # final check
-if [ ! -f wmc/classification.mat ]; then
-	echo "combination failed. see logs and derivatives"
+if [ ! -f track/track.tck ]; then
+	echo "segmentation failed. see logs and derivatives"
 	exit 1
 else
-	echo "combination complete"
-	mv *.tck *.txt *.csv ./raw/
+	echo "segmentation complete"
+	mv *.txt *.csv ./raw/
 	exit 0
 fi
