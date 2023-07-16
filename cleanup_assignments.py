@@ -32,10 +32,19 @@ def load_assignment_data(assignment):
 
 	return data
 
+def load_labels(label_file):
+	
+    return pd.read_json(label_file,orient='records')
+
 def main():
+
+	with open('config.json','r') as config_f:
+		config = json.load(config_f)
 
 	# identify all assignments files
 	assignments = glob.glob('track*_assignments.txt')
+    	labels = load_labels(config['label'])
+    	labels['base'] = [ '.'.join(f.split('.')[1:]) if 'h.' in f else f for f in labels['name'] ]
 
 	# loop through all assignments files
 	for i in assignments:
