@@ -43,8 +43,8 @@ def main():
 
 	# identify all assignments files
 	assignments = glob.glob('track*_assignments.txt')
-    	labels = load_labels(config['label'])
-    	labels['base'] = [ '.'.join(f.split('.')[1:]) if 'h.' in f else f for f in labels['name'] ]
+	labels = load_labels(config['label'])
+	labels['base'] = [ '.'.join(f.split('.')[1:]) if 'h.' in f else f for f in labels['name'] ]
 
 	# loop through all assignments files
 	for i in assignments:
