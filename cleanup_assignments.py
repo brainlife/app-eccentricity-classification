@@ -53,7 +53,7 @@ def main():
 
 		tmp = load_assignment_data(i)
 
-		out_assignments = identify_both_endpoints(tmp)
+		out_assignments = identify_both_endpoints(tmp,labels)
 
 		write_txt([ str(f) for f in out_assignments],node_name+"_assignments_both_endpoints.txt")
 
