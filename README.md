@@ -10,18 +10,18 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgrey.svg" alt="MIT license"></a>
 </p>
 
-> 📍 **This branch, `mrtrix3-wbfg-v1.0`, runs 2 brainlife.io Apps** that share the same code:
+> **This branch, `mrtrix3-wbfg-v1.0`, runs 2 brainlife.io Apps** that share the same code:
 >
 > - Segment whole-brain tractogram -  Parcellation ([doi:10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763))
 > - Segment whole-brain tractogram by Eccentricity - Parcellation ([doi:10.25663/brainlife.app.760](https://doi.org/10.25663/brainlife.app.760))
 >
 > The other Apps in this repository are listed under **Versions on brainlife.io** below.
 
-## 🧠 At a glance
+## At a glance
 
 <!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
 
-### 🧩 Segment whole-brain tractogram -  Parcellation
+### Segment whole-brain tractogram -  Parcellation
 
 > **Segments a whole-brain tractogram into streamlines that connect a parcellation's labels with MRtrix3 tck2connectome and connectome2tck, and outputs the merged tractogram.**
 
@@ -29,27 +29,27 @@ Assigns every streamline to the parcels at its two endpoints with tck2connectome
 
 | | |
 |---|---|
-| 📥 **Inputs** | `neuro/track/tck` · `neuro/parcellation/volume` |
-| 📤 **Outputs** | `neuro/track/tck` |
-| 🐳 **Container** | `brainlife/mrtrix3:3.0.0` |
-| ⚙️ **Resources** | 1 CPUs · 1.5 h walltime |
-| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763) |
+| **Inputs** | `neuro/track/tck` · `neuro/parcellation/volume` |
+| **Outputs** | `neuro/track/tck` |
+| **Container** | `brainlife/mrtrix3:3.0.0` |
+| **Resources** | 1 CPUs · 1.5 h walltime |
+| **Run it** | [doi.org/10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763) |
 
-#### 📥 Inputs
+#### Inputs
 
 | Input | Datatype | Required | Description |
 |---|---|---|---|
 | `track` | `neuro/track/tck` | yes | Whole-brain tractogram (.tck). |
 | `parcellation` | `neuro/parcellation/volume` | yes | Volumetric parcellation whose labels define the segmentation. Must be in the same space as the tractogram. |
 
-#### 📤 Outputs
+#### Outputs
 
 | Output | Datatype | Description |
 |---|---|---|
 | `track` | `neuro/track/tck` | Tractogram (.tck) of the streamlines assigned to the parcellation's labels. |
 
 <details>
-<summary><b>⚙️ Parameters</b> (1)</summary>
+<summary><b>Parameters</b> (1)</summary>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -57,7 +57,7 @@ Assigns every streamline to the parcels at its two endpoints with tck2connectome
 
 </details>
 
-### 🧩 Segment whole-brain tractogram by Eccentricity - Parcellation
+### Segment whole-brain tractogram by Eccentricity - Parcellation
 
 > **Segments a whole-brain tractogram into streamlines that connect a parcellation's labels (eccentricity parcels) with MRtrix3 tck2connectome and connectome2tck, and outputs the merged tractogram.**
 
@@ -65,27 +65,27 @@ Assigns every streamline to the parcels at its two endpoints with tck2connectome
 
 | | |
 |---|---|
-| 📥 **Inputs** | `neuro/track/tck` · `neuro/parcellation/volume` |
-| 📤 **Outputs** | `neuro/track/tck` |
-| 🐳 **Container** | `brainlife/mrtrix3:3.0.0` |
-| ⚙️ **Resources** | 1 CPUs · 1.5 h walltime |
-| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.760](https://doi.org/10.25663/brainlife.app.760) |
+| **Inputs** | `neuro/track/tck` · `neuro/parcellation/volume` |
+| **Outputs** | `neuro/track/tck` |
+| **Container** | `brainlife/mrtrix3:3.0.0` |
+| **Resources** | 1 CPUs · 1.5 h walltime |
+| **Run it** | [doi.org/10.25663/brainlife.app.760](https://doi.org/10.25663/brainlife.app.760) |
 
-#### 📥 Inputs
+#### Inputs
 
 | Input | Datatype | Required | Description |
 |---|---|---|---|
 | `track` | `neuro/track/tck` | yes | Whole-brain tractogram (.tck). |
 | `parcellation` | `neuro/parcellation/volume` (eccentricity) | yes | Volumetric parcellation of eccentricity bins whose labels define the segmentation. Must be in the same space as the tractogram. |
 
-#### 📤 Outputs
+#### Outputs
 
 | Output | Datatype | Description |
 |---|---|---|
 | `track` | `neuro/track/tck` | Tractogram (.tck) of the streamlines assigned to the parcellation's labels. |
 
 <details>
-<summary><b>⚙️ Parameters</b> (1)</summary>
+<summary><b>Parameters</b> (1)</summary>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Assigns every streamline to the parcels at its two endpoints with tck2connectome
 
 <!-- brainlife-app:end -->
 
-## 🏷️ Versions on brainlife.io
+## Versions on brainlife.io
 
 Each version is a separate App on brainlife.io, built from a branch of this repository. The MATLAB Apps split tracts by eccentricity ROIs; the MRtrix3 Apps split tracts, or a whole-brain tractogram, by the labels of a volumetric parcellation.
 
@@ -109,15 +109,15 @@ Each version is a separate App on brainlife.io, built from a branch of this repo
 | Bundle segmented tracks by eccentricity - Parcellation (Matlab) | MATLAB R2017a | [`v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/v1.0) | [doi:10.25663/brainlife.app.649](https://doi.org/10.25663/brainlife.app.649) | deprecated |
 | Bundle segmented tracks by eccentricity - Deprecated | MATLAB R2017a | [`v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/v1.0) | [doi:10.25663/brainlife.app.232](https://doi.org/10.25663/brainlife.app.232) | superseded by app.648 |
 
-## 🚀 Running the App
+## Running the App
 
-### ☁️ On brainlife.io
+### On brainlife.io
 
 Open the App at [doi.org/10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763), choose a whole-brain tractogram (`neuro/track/tck`) and a volumetric parcellation (`neuro/parcellation/volume`) in the same space, decide whether to set `both_endpoints`, and press **Execute**. The output is a tractogram of the streamlines assigned to the parcellation's labels, archived to your project.
 
 To split tracts that are already segmented (for example the optic radiation) rather than a whole-brain tractogram, use one of the "Bundle segmented tracks by eccentricity" Apps in the table above. They take a white matter classification (`neuro/wmc`) and its tractogram, and output a new classification with one tract per input tract and eccentricity bin.
 
-### 💻 Locally
+### Locally
 
 You need [Singularity/Apptainer](https://apptainer.org/) and [`jq`](https://jqlang.github.io/jq/). The containers (`brainlife/mrtrix3:3.0.0`, `brainlife/pyafq:1.0`) are pulled from Docker Hub on first use.
 
@@ -157,7 +157,7 @@ The MATLAB version on the default branch (`master`, and `v1.0`) instead reads a 
 
 It runs the compiled MATLAB code in `compiled/` with the `brainlife/mcr:neurodebian1604-r2017a` container. Running the MATLAB source instead of the compiled binary needs [MATLAB](https://www.mathworks.com/products/matlab.html), [jsonlab](https://github.com/fangq/jsonlab), [vistasoft](https://github.com/vistalab/vistasoft) and [wma_tools](https://github.com/DanNBullock/wma_tools).
 
-### 🧪 Sample data
+### Sample data
 
 Download sample datasets from brainlife.io with the [brainlife CLI](https://github.com/brainlife/cli):
 
@@ -168,7 +168,7 @@ mkdir input
 bl dataset download <dataset id>
 ```
 
-## 📦 Outputs
+## Outputs
 
 Whole-brain tractogram Apps (`mrtrix3-wbfg-v1.0`):
 
@@ -185,12 +185,12 @@ MATLAB Apps (`master`, `v1.0`): `classification/classification.mat` with one tra
 
 The App also writes `product.json`, which brainlife.io uses to display the results.
 
-## 🩺 Troubleshooting
+## Troubleshooting
 
 - **`segmentation failed. see logs and derivatives`**: no streamlines were assigned to the parcellation. The parcellation must be in the same space as the tractogram; check the intermediate files in the working directory.
 - **MATLAB versions fail to find ROIs**: the eccentricity ROIs must be named `ROI<visualArea>.Ecc<MinDegree>to<MaxDegree>.nii.gz` for every visual area and degree bin requested, as produced by the pRF-based ROI Apps on brainlife.io. `MinDegree`, `MaxDegree`, `tractNames` and `operations` are space-separated lists that must line up.
 
-## 📚 Citing
+## Citing
 
 > [!TIP]
 > If you use this App in your work, please cite the App, the software it builds on and brainlife.io (below). GitHub's **Cite this repository** button gives the App citation in APA and BibTeX.
@@ -204,13 +204,13 @@ The App also writes `product.json`, which brainlife.io uses to display the resul
 - Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. *Nature Methods* 21:809–813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
 - Avesani P, McPherson B, Hayashi S, et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. *Scientific Data* 6:69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
 
-## 👥 Authors
+## Authors
 
 - Brad Caron
 
 **Contributors:** Soichi Hayashi
 
-## 💰 Funding
+## Funding
 
 [![Wellcome-226486/Z/22/Z](https://img.shields.io/badge/Wellcome-226486%2FZ%2F22%2FZ-purple.svg)](https://wellcome.org/)
 [![NIH-NINDS-U24NS140384](https://img.shields.io/badge/NIH_NINDS-U24NS140384-green.svg)](https://reporter.nih.gov/project-details/11261037)
@@ -229,6 +229,6 @@ The App also writes `product.json`, which brainlife.io uses to display the resul
 
 <sub>brainlife.io is publicly funded, and acknowledging that support helps keep it running. This App was developed with support from Wellcome, the U.S. National Institutes of Health (including the BRAIN Initiative BRAIN CONNECTS program: The Axonal Projectome EXchange, U24NS140384, and the Center for Mesoscale Connectomics, UM1NS132207) and the U.S. National Science Foundation.</sub>
 
-## ⚖️ License
+## License
 
 [MIT](LICENSE).
