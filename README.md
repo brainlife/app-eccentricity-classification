@@ -1,95 +1,247 @@
-[![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.232-blue.svg)](https://doi.org/https://doi.org/10.25663/brainlife.app.232)
+<h1 align="center">Segment tracts by eccentricity and parcellation</h1>
 
-# Bundle segmented tracks by eccentricity
+<p align="center">
+  Sub-bundles of white matter tracts, or of a whole-brain tractogram, defined by the parcels (for example pRF eccentricity bins) that their streamline endpoints reach.
+</p>
 
-This app will This app will bundle tracks by population receptive field (prf) derived eccentricity metrics in the form of ROIs. An example use case for this app would be bundling the optic radiation by specific eccentricity values.
+<p align="center">
+  <a href="https://github.com/brainlife/abcd-spec"><img src="https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg" alt="ABCD Spec v1.1"></a>
+  <a href="https://doi.org/10.25663/brainlife.app.648"><img src="https://img.shields.io/badge/Brainlife-brainlife.app.648-blue.svg" alt="Run on brainlife.io"></a>
+  <a href="https://github.com/brainlife/app-eccentricity-classification/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgrey.svg" alt="MIT license"></a>
+</p>
 
-### Authors
+> 📍 **This branch, `v1.0`, runs 3 brainlife.io Apps** that share the same code:
+>
+> - Bundle segmented tracks by eccentricity - Parcellation (Matlab) ([doi:10.25663/brainlife.app.649](https://doi.org/10.25663/brainlife.app.649)) (deprecated)
+> - Bundle segmented tracks by eccentricity ([doi:10.25663/brainlife.app.648](https://doi.org/10.25663/brainlife.app.648))
+> - Bundle segmented tracks by eccentricity - Deprecated ([doi:10.25663/brainlife.app.232](https://doi.org/10.25663/brainlife.app.232))
+>
+> The other Apps in this repository are listed under **Versions on brainlife.io** below.
 
-- Brad Caron (bacaron@utexas.edu)
+## 🧠 At a glance
 
-### Contributors
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
 
-- Soichi Hayashi (shayashi@iu.edu)
+### 🧩 Bundle segmented tracks by eccentricity
 
-### Funding Acknowledgement
+> **Splits already-segmented white matter tracts (for example the optic radiation) into sub-bundles by population receptive field (pRF) eccentricity ROIs, using MATLAB wma_tools, and outputs a new tract classification.**
 
-brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your publications and code reusing this code.
+For each named tract in the input classification, keeps the streamlines that pass the requested operation against each eccentricity-bin ROI of a visual area (for example V1 ROIs between 0-3, 15-30 and 30-90 degrees) and writes a new classification with one tract per tract/eccentricity bin. Use it to bundle the optic radiation or similar visual tracts by eccentricity; it needs eccentricity ROIs named ROI<visualArea>.Ecc<min>to<max>.nii.gz, as produced by pRF-based ROI Apps.
 
-[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
-[![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
-[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
-[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
-[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/wmc` · `neuro/track/tck` · `neuro/rois` · `neuro/freesurfer` |
+| 📤 **Outputs** | `neuro/wmc` |
+| 🐳 **Container** | `brainlife/mcr:neurodebian1604-r2017a` |
+| ⚙️ **Resources** | 16 GB memory · 0.5 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.648](https://doi.org/10.25663/brainlife.app.648) |
 
-### Citations
+#### 📥 Inputs
 
-We kindly ask that you cite the following articles when publishing papers and code using this code.
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `wmc` | `neuro/wmc` | yes | White matter classification (classification.mat) containing the tracts to split. |
+| `wbFG` | `neuro/track/tck` | yes | Whole-brain tractogram (.tck) that the classification indexes. |
+| `rois` | `neuro/rois` (eccentricity) | yes | Eccentricity ROIs derived from pRF mapping. Files must be named ROI<visualArea>.Ecc<MinDegree>to<MaxDegree>.nii.gz for every visual area and degree bin requested. |
+| `freesurfer` | `neuro/freesurfer` | yes | FreeSurfer output of the same subject; required by the registration but not read by the code on this branch. |
 
-1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). https://doi.org/10.1038/s41597-019-0073-y
+#### 📤 Outputs
 
-#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
+| Output | Datatype | Description |
+|---|---|---|
+| `classification` | `neuro/wmc` | New white matter classification with one tract per input tract and eccentricity bin (named <tract>_Ecc<min>to<max>), plus tract JSON files for visualisation and fiber counts. |
 
-## Running the App
+<details>
+<summary><b>⚙️ Parameters</b> (5)</summary>
 
-### On Brainlife.io
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `tractNames` | string |  | name of tracts |
+| `visualArea` | string |  | name of visual area ROIs with eccentricity. ex: varea |
+| `MinDegree` | string | `0 15 30` | Space-separated lower bounds (degrees of eccentricity) of the bins; paired with MaxDegree. |
+| `MaxDegree` | string | `3 30 90` | Space-separated upper bounds (degrees of eccentricity) of the bins; paired with MinDegree. |
+| `operations` | string |  | Space-separated wma_tools ROI operation per tract (for example endpoints or and) used to keep streamlines relative to each eccentricity ROI. |
 
-You can submit this App online at [https://doi.org/https://doi.org/10.25663/brainlife.app.232](https://doi.org/https://doi.org/10.25663/brainlife.app.232) via the 'Execute' tab.
+</details>
 
-### Running Locally (on your machine)
+### 🧩 Bundle segmented tracks by eccentricity - Deprecated
 
-1. git clone this repo
+> **Deprecated (use 'Bundle segmented tracks by eccentricity'): splits segmented white matter tracts into sub-bundles by pRF eccentricity ROIs with MATLAB wma_tools and outputs a new tract classification.**
 
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files.
+For each named tract in the input classification, keeps the streamlines that pass the requested operation against each eccentricity-bin ROI of a visual area (for example V1 ROIs between 0-3, 15-30 and 30-90 degrees) and writes a new classification with one tract per tract/eccentricity bin. Use it to bundle the optic radiation or similar visual tracts by eccentricity; it needs eccentricity ROIs named ROI<visualArea>.Ecc<min>to<max>.nii.gz, as produced by pRF-based ROI Apps.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/wmc` · `neuro/track/tck` · `neuro/rois` |
+| 📤 **Outputs** | `neuro/wmc` |
+| 🐳 **Container** | `brainlife/mcr:neurodebian1604-r2017a` |
+| ⚙️ **Resources** | 16 GB memory · 0.5 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.232](https://doi.org/10.25663/brainlife.app.232) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `wmc` | `neuro/wmc` | yes | White matter classification (classification.mat) containing the tracts to split. |
+| `wbFG` | `neuro/track/tck` | yes | Whole-brain tractogram (.tck) that the classification indexes. |
+| `rois` | `neuro/rois` (eccentricity) | yes | Eccentricity ROIs derived from pRF mapping. Files must be named ROI<visualArea>.Ecc<MinDegree>to<MaxDegree>.nii.gz for every visual area and degree bin requested. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `classification` | `neuro/wmc` | New white matter classification with one tract per input tract and eccentricity bin (named <tract>_Ecc<min>to<max>), plus tract JSON files for visualisation and fiber counts. |
+
+<details>
+<summary><b>⚙️ Parameters</b> (5)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `tractNames` | string |  | name of tracts |
+| `visualArea` | string |  | name of visual area ROIs with eccentricity. ex: varea |
+| `MinDegree` | string | `0 15 30` | Space-separated lower bounds (degrees of eccentricity) of the bins; paired with MaxDegree. |
+| `MaxDegree` | string | `3 30 90` | Space-separated upper bounds (degrees of eccentricity) of the bins; paired with MinDegree. |
+| `operations` | string |  | Space-separated wma_tools ROI operation per tract (for example endpoints or and) used to keep streamlines relative to each eccentricity ROI. |
+
+</details>
+
+<!-- brainlife-app:end -->
+
+## 🏷️ Versions on brainlife.io
+
+Each version is a separate App on brainlife.io, built from a branch of this repository. The MATLAB Apps split tracts by eccentricity ROIs; the MRtrix3 Apps split tracts, or a whole-brain tractogram, by the labels of a volumetric parcellation.
+
+| App | Tool | Branch | Run it | Status |
+|---|---|---|---|---|
+| Segment whole-brain tractogram - Parcellation | MRtrix3 3.0.0 | [`mrtrix3-wbfg-v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/mrtrix3-wbfg-v1.0) | [doi:10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763) | current |
+| Segment whole-brain tractogram by Eccentricity - Parcellation | MRtrix3 3.0.0 | [`mrtrix3-wbfg-v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/mrtrix3-wbfg-v1.0) | [doi:10.25663/brainlife.app.760](https://doi.org/10.25663/brainlife.app.760) | available |
+| Bundle segmented tracks by eccentricity - Parcellation | MRtrix3 3.0.0, MATLAB R2017a | [`mrtrix3-v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/mrtrix3-v1.0) | [doi:10.25663/brainlife.app.714](https://doi.org/10.25663/brainlife.app.714) | available |
+| Bundle segmented tracks by eccentricity - Parcellation (multiple parcellations) | MRtrix3 3.0.0, FSL 5.0.11, MATLAB R2017a | [`mrtrix3-v1.0-multipleparcs`](https://github.com/brainlife/app-eccentricity-classification/tree/mrtrix3-v1.0-multipleparcs) | [doi:10.25663/brainlife.app.712](https://doi.org/10.25663/brainlife.app.712) | available |
+| **Bundle segmented tracks by eccentricity** (this branch) | MATLAB R2017a | [`v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/v1.0) | [doi:10.25663/brainlife.app.648](https://doi.org/10.25663/brainlife.app.648) | available |
+| **Bundle segmented tracks by eccentricity - Parcellation (Matlab)** (this branch) | MATLAB R2017a | [`v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/v1.0) | [doi:10.25663/brainlife.app.649](https://doi.org/10.25663/brainlife.app.649) | deprecated |
+| **Bundle segmented tracks by eccentricity - Deprecated** (this branch) | MATLAB R2017a | [`v1.0`](https://github.com/brainlife/app-eccentricity-classification/tree/v1.0) | [doi:10.25663/brainlife.app.232](https://doi.org/10.25663/brainlife.app.232) | superseded by app.648 |
+
+## 🚀 Running the App
+
+### ☁️ On brainlife.io
+
+Open the App at [doi.org/10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763), choose a whole-brain tractogram (`neuro/track/tck`) and a volumetric parcellation (`neuro/parcellation/volume`) in the same space, decide whether to set `both_endpoints`, and press **Execute**. The output is a tractogram of the streamlines assigned to the parcellation's labels, archived to your project.
+
+To split tracts that are already segmented (for example the optic radiation) rather than a whole-brain tractogram, use one of the "Bundle segmented tracks by eccentricity" Apps in the table above. They take a white matter classification (`neuro/wmc`) and its tractogram, and output a new classification with one tract per input tract and eccentricity bin.
+
+### 💻 Locally
+
+You need [Singularity/Apptainer](https://apptainer.org/) and [`jq`](https://jqlang.github.io/jq/). The containers (`brainlife/mrtrix3:3.0.0`, `brainlife/pyafq:1.0`) are pulled from Docker Hub on first use.
+
+1. Clone this repository and check out the branch of the App you want (for example `git checkout mrtrix3-wbfg-v1.0`).
+2. Create `config.json` with the paths to your inputs and the options you want:
+
+   ```json
+   {
+       "track": "/input/track/track.tck",
+       "parcellations": "/input/parcellation/parc.nii.gz",
+       "key": "/input/parcellation/key.txt",
+       "label": "/input/parcellation/label.json",
+       "both_endpoints": false
+   }
+   ```
+
+3. Run the App:
+
+   ```bash
+   ./main
+   ```
+
+The MATLAB version on the default branch (`master`, and `v1.0`) instead reads a white matter classification, a whole-brain tractogram and a directory of eccentricity ROIs:
 
 ```json
 {
-	"classification": "/input/wmc/classification.mat",
-	"tracts": "/input/wmc/tracts",
-	"surfaces": "/input/wmc/surfaces",
-	"wbFG": "/input/track/track.tck",
-	"rois": "/input/rois/rois",
-	"tractNames": "leftMeyers",
-	"visualArea": "varea",
-	"MinDegree": "0 15 30",
-	"MaxDegree": "3 30 90",
-	"operations": "and and and"
+    "classification": "/input/wmc/classification.mat",
+    "wbFG": "/input/track/track.tck",
+    "rois": "/input/rois/rois/",
+    "visualArea": "varea",
+    "tractNames": "leftILF rightILF leftVOF rightVOF",
+    "operations": "endpoints endpoints both_endpoints both_endpoints",
+    "MinDegree": "0 6 30",
+    "MaxDegree": "3 30 90"
 }
 ```
 
-### Sample Datasets
+It runs the compiled MATLAB code in `compiled/` with the `brainlife/mcr:neurodebian1604-r2017a` container. Running the MATLAB source instead of the compiled binary needs [MATLAB](https://www.mathworks.com/products/matlab.html), [jsonlab](https://github.com/fangq/jsonlab), [vistasoft](https://github.com/vistalab/vistasoft) and [wma_tools](https://github.com/DanNBullock/wma_tools).
 
-You can download sample datasets from Brainlife using [Brainlife CLI](https://github.com/brain-life/cli). 
+### 🧪 Sample data
 
-```
+Download sample datasets from brainlife.io with the [brainlife CLI](https://github.com/brainlife/cli):
+
+```bash
 npm install -g brainlife
 bl login
 mkdir input
-bl dataset download
+bl dataset download <dataset id>
 ```
 
-3. Launch the App by executing 'main'
+## 📦 Outputs
 
-```bash
-./main
+Whole-brain tractogram Apps (`mrtrix3-wbfg-v1.0`):
+
+```text
+track/
+├── track.tck        streamlines assigned to the parcellation's labels
+└── track_info.txt   tckinfo summary of track.tck
+raw/                 intermediate assignments, per-parcel tractograms and the copied parcellation
 ```
 
-## Output
+Segmented-tract Apps (`mrtrix3-v1.0`, `mrtrix3-v1.0-multipleparcs`): `wmc/classification.mat` with one tract per selected input tract and parcel (named `<tract>_<parcel>`), its tract JSON files and fiber counts, and `track/track.tck` concatenating the sub-bundles.
 
-The main output of this App is a wmc datatype containing the streamline information for each of the newly bundled tracts
+MATLAB Apps (`master`, `v1.0`): `classification/classification.mat` with one tract per input tract and eccentricity bin (named `<tract>_Ecc<min>to<max>`), `classification/tracts/` for visualisation and `classification/output_fibercounts.txt`.
 
-#### Product.json
+The App also writes `product.json`, which brainlife.io uses to display the results.
 
-The secondary output of this app is `product.json`. This file allows web interfaces, DB and API calls on the results of the processing.
+## 🩺 Troubleshooting
 
-### Dependencies
+- **`segmentation failed. see logs and derivatives`**: no streamlines were assigned to the parcellation. The parcellation must be in the same space as the tractogram; check the intermediate files in the working directory.
+- **MATLAB versions fail to find ROIs**: the eccentricity ROIs must be named `ROI<visualArea>.Ecc<MinDegree>to<MaxDegree>.nii.gz` for every visual area and degree bin requested, as produced by the pRF-based ROI Apps on brainlife.io. `MinDegree`, `MaxDegree`, `tractNames` and `operations` are space-separated lists that must line up.
 
-This App only requires [singularity](https://www.sylabs.io/singularity/) to run. If you don't have singularity, you will need to install following dependencies.   
+## 📚 Citing
 
-- matlab: https://www.mathworks.com/products/matlab.html
-- jsonlab: https://github.com/fangq/jsonlab
-- vistasoft: https://github.com/vistalab/vistasoft
-- wma_tools: https://github.com/DanNBullock/wma_tools
+> [!TIP]
+> If you use this App in your work, please cite the App, the software it builds on and brainlife.io (below). GitHub's **Cite this repository** button gives the App citation in APA and BibTeX.
 
-#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
+- Bundle segmented tracks by eccentricity - Parcellation (Matlab). brainlife.io App. [doi:10.25663/brainlife.app.649](https://doi.org/10.25663/brainlife.app.649)
+- Bundle segmented tracks by eccentricity. brainlife.io App. [doi:10.25663/brainlife.app.648](https://doi.org/10.25663/brainlife.app.648)
+- Bundle segmented tracks by eccentricity - Deprecated. brainlife.io App. [doi:10.25663/brainlife.app.232](https://doi.org/10.25663/brainlife.app.232)
+- Jenkinson et al. FSL. *NeuroImage* 62:782-790 (2012). [doi:10.1016/j.neuroimage.2011.09.015](https://doi.org/10.1016/j.neuroimage.2011.09.015)
+- Tournier et al. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. *NeuroImage* 202:116137 (2019). [doi:10.1016/j.neuroimage.2019.116137](https://doi.org/10.1016/j.neuroimage.2019.116137)
+- Bullock et al. Associative white matter connecting the dorsal and ventral posterior human cortex. *Brain Structure and Function* 224:2631-2660 (2019). [doi:10.1007/s00429-019-01907-8](https://doi.org/10.1007/s00429-019-01907-8)
+- Kruper et al. Evaluating the Reliability of Human Brain White Matter Tractometry. *Aperture Neuro* 2021 (2021). [doi:10.52294/e6198273-b8e3-4b63-babb-6e6b0da10669](https://doi.org/10.52294/e6198273-b8e3-4b63-babb-6e6b0da10669)
+- Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. *Nature Methods* 21:809–813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
+- Avesani P, McPherson B, Hayashi S, et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. *Scientific Data* 6:69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+
+## 👥 Authors
+
+- Brad Caron
+
+**Contributors:** Soichi Hayashi
+
+## 💰 Funding
+
+[![Wellcome-226486/Z/22/Z](https://img.shields.io/badge/Wellcome-226486%2FZ%2F22%2FZ-purple.svg)](https://wellcome.org/)
+[![NIH-NINDS-U24NS140384](https://img.shields.io/badge/NIH_NINDS-U24NS140384-green.svg)](https://reporter.nih.gov/project-details/11261037)
+[![NIH-NINDS-UM1NS132207](https://img.shields.io/badge/NIH_NINDS-UM1NS132207-green.svg)](https://reporter.nih.gov/project-details/11411328)
+[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://reporter.nih.gov/project-details/10262925)
+[![NIH-NIBIB-R01EB030896](https://img.shields.io/badge/NIH_NIBIB-R01EB030896-green.svg)](https://reporter.nih.gov/project-details/10428625)
+[![NIH-NIMH-R01MH126699](https://img.shields.io/badge/NIH_NIMH-R01MH126699-green.svg)](https://reporter.nih.gov/project-details/10460628)
+[![NIH-NIDCD-R01DC020088](https://img.shields.io/badge/NIH_NIDCD-R01DC020088-green.svg)](https://reporter.nih.gov/project-details/11140284)
+[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1734853)
+[![NSF-BCS-2203524](https://img.shields.io/badge/NSF_BCS-2203524-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2203524)
+[![NSF-IIS-1636893](https://img.shields.io/badge/NSF_IIS-1636893-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-OAC-2148729](https://img.shields.io/badge/NSF_OAC-2148729-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148729)
+[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1912270)
+[![NSF-IIS-2148700](https://img.shields.io/badge/NSF_IIS-2148700-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148700)
+[![NSF-OAC-1916518](https://img.shields.io/badge/NSF_OAC-1916518-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1916518)
+
+<sub>brainlife.io is publicly funded, and acknowledging that support helps keep it running. This App was developed with support from Wellcome, the U.S. National Institutes of Health (including the BRAIN Initiative BRAIN CONNECTS program: The Axonal Projectome EXchange, U24NS140384, and the Center for Mesoscale Connectomics, UM1NS132207) and the U.S. National Science Foundation.</sub>
+
+## ⚖️ License
+
+[MIT](https://github.com/brainlife/app-eccentricity-classification/blob/master/LICENSE).
