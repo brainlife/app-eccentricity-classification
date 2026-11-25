@@ -3,6 +3,31 @@
 
 # Bundle segmented tracks by eccentricity
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+**Segments a whole-brain tractogram into streamlines that connect a parcellation's labels with MRtrix3 tck2connectome and connectome2tck, and outputs the merged tractogram.**
+
+Assigns every streamline to the parcels at its two endpoints with tck2connectome, extracts streamlines per parcel with connectome2tck and concatenates them into one .tck. With both_endpoints set, only streamlines whose two endpoints fall in the same parcel are kept. The parcellation must be in the same space as the tractogram.
+
+Run it on brainlife.io: [https://doi.org/10.25663/brainlife.app.763](https://doi.org/10.25663/brainlife.app.763)
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `track` | `neuro/track/tck` | yes | Whole-brain tractogram (.tck). |
+| `parcellation` | `neuro/parcellation/volume` | yes | Volumetric parcellation whose labels define the segmentation. Must be in the same space as the tractogram. |
+
+| Output | Datatype | Description |
+|---|---|---|
+| `track` | `neuro/track/tck` | Tractogram (.tck) of the streamlines assigned to the parcellation's labels. |
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `both_endpoints` | boolean | `false` | If true, keep only streamlines whose two endpoints fall in the same parcel. |
+
+Runtime: container `brainlife/mrtrix3:3.0.0`; 1 CPUs; 1.5 h walltime.
+
+<!-- brainlife-app:end -->
+
 This app will This app will bundle tracks by population receptive field (prf) derived eccentricity metrics in the form of ROIs. An example use case for this app would be bundling the optic radiation by specific eccentricity values.
 
 ### Authors
